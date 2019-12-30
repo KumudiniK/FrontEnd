@@ -1,0 +1,30 @@
+.StaticBox{
+    background-color: black;
+    color:whitesmoke;
+    height:200px;
+    
+
+}
+.level1{
+    margin-top:30px;
+    margin-left:150px;
+}
+.level2{
+    
+    margin-left: 150px;
+}
+.item{
+    margin-top: 80px;
+}
+.card-body{
+    box-shadow: 4px 4px gray;
+   
+}
+.bt{
+    margin-left: 130px;
+}
+.slide{
+    color:brown;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 30px;
+}
