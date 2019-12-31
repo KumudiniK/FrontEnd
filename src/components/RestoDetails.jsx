@@ -14,7 +14,8 @@ class RestoDetails extends Component{
             address:"",
             list:[],
             modalState:false,
-            oModalState:false
+            oModalState:false,
+            showButton:false
            
             
         }
@@ -62,6 +63,7 @@ class RestoDetails extends Component{
     orderNow=(id)=>{
         
         const {list}= this.state;
+        console.log("add or plus ")
         
         const refItem=list.filter((items)=>items.id==id);
         //console.log(refItem)
@@ -71,9 +73,30 @@ class RestoDetails extends Component{
         refItem[0].count+=1
         console.log(refItem[0].count)
        this.setState({list})
+       this.setState({showButton:true})
+      
+
        
         
       
+
+    }
+    add=(id)=>{
+        const {list}= this.state
+        const refItem=list.filter((items)=>items.id==id);
+        refItem[0].count+=1
+        console.log(refItem[0].count)
+       this.setState({list})
+    }
+    
+    remove=(id)=>{
+        
+        const {list}= this.state;
+        
+        const refItem=list.filter((items)=>items.id==id);
+        
+        refItem[0].count-=1
+        this.setState({list})
 
     }
     isOdClosed=()=>{
@@ -121,10 +144,11 @@ class RestoDetails extends Component{
             const{toggleState}=this.props.history.location.state
             
            if(!toggleState){
+
             return (
             
                 <div className="col-sm-3" key={dishes.id}>
-           <button className="btn btn-warning">{dishes.count}</button>
+           
                   
                 
                     <div className="card-body"><button className="btn btn-danger"
@@ -133,10 +157,13 @@ class RestoDetails extends Component{
                          <img src=""/>   
                         {dishes.MenuItem}</h4>
                         <h6>{dishes.Price}</h6>
-                        <button className="bt btn btn-success"
-                                onClick={()=>{this.orderNow(dishes.id)}}>Add</button>
-                       
-        
+                       {dishes.count>0 ?<div><button className="btn btn-success"
+                      onClick={()=>{this.remove(dishes.id)}}>-</button><span>{dishes.count}</span>
+                       <button className="btn btn-warning" onClick={()=>{this.add(dishes.id)}}>+</button> </div>: 
+                       <button className="bt btn btn-success"
+                                onClick={()=>{this.orderNow(dishes.id)}} >Add</button>}
+                         
+
         
 
                         
@@ -154,13 +181,17 @@ class RestoDetails extends Component{
                       
                     
                         <div className="card-body">
-                        <button className="btn btn-warning">{dishes.count}</button>
+                     
                             <h4 className="card-title">
                              <img src=""/>   
                             {dishes.MenuItem}</h4>
                             <h6>{dishes.Price}</h6>
-                            <button className="bt btn btn-success"
-                                onClick={()=>{this.orderNow(dishes.id)}}>Add</button>
+                            {dishes.count>0 ?<div><button className="btn btn-success" onClick={()=>{this.remove(dishes.id)}}>-</button>
+                            <span>{dishes.count}</span>
+                       <button className="btn btn-warning" onClick={()=>{this.add(dishes.id)}}>+</button> </div>: 
+                       <button className="bt btn btn-success"
+                                onClick={()=>{this.orderNow(dishes.id)}} >Add</button>}
+                         
 
 
              
@@ -205,8 +236,9 @@ class RestoDetails extends Component{
     render(){
         const{Name,address}=this.state;
         
-        const{toggleState}=this.props.history.location.state
+        const{toggleState}=this.props.history.location.state //passed state as a props from parent
            console.log("fetched state:"+toggleState)
+           
         if(!toggleState){
             return(
                 <div>
@@ -217,11 +249,13 @@ class RestoDetails extends Component{
                         <h1 className="level1">Hotel {Name}</h1>
                         <h3 className="level2">Address: {address}</h3>
                     </div>
-                    <button className="btn btn-primary" onClick={()=>{this.handleModal()}}>place order</button>
+                    <button className="btn btn-primary" disabled={!this.state.showButton}
+                    onClick={()=>{this.handleModal()}}>place order</button>
 
                     
 
-                    <OrderModal isOpen={this.state.oModalState} isOdClosed={this.isOdClosed} placeOrder={this.placeOrder}
+                    <OrderModal isOpen={this.state.oModalState} 
+                    isOdClosed={this.isOdClosed} placeOrder={this.placeOrder}
                      list={this.state.list} />
 
                   <div className="row">
@@ -254,7 +288,8 @@ class RestoDetails extends Component{
                         <h1 className="level1">Hotel {Name}</h1>
                         <h3 className="level2">Address: {address}</h3>
                     </div>
-                    <button className="btn btn-primary" onClick={()=>{this.handleModal()}}>place order</button>
+                    <button className="btn btn-primary" disabled={!this.state.showButton}
+                    onClick={()=>{this.handleModal()}}>place order</button>
                     
 
                     <OrderModal isOpen={this.state.oModalState} isClosed={this.isClosed} list={this.state.list}
